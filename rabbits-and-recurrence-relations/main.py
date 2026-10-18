@@ -1,5 +1,9 @@
-"""Rabbits and Recurrence Relations"""
-from pathlib import Path
+n, k = map(int, input().split())
 
-text = (Path(__file__).parent / "input.txt").read_text()
-print(text)
+arr = [0] * k
+arr[0] = 1
+
+for i in range(n):
+    print(arr)
+    arr[i] = sum(arr) - arr[i-1 % k]
+print(arr)
