@@ -1,0 +1,17 @@
+[project]
+name = "counting-dna-nucleotides"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Ollie Lynas", email = "olyn109@aucklanduni.ac.nz" }
+]
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+counting-dna-nucleotides = "counting_dna_nucleotides:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
