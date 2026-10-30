@@ -1,19 +1,13 @@
-"""Independent Alleles"""
 from pathlib import Path
-
-
-def fasta(text):
-    """Parse FASTA into {id: sequence}, in file order."""
-    records = {}
-    for block in text.split(">")[1:]:
-        name, *lines = block.splitlines()
-        records[name.strip()] = "".join(line.strip() for line in lines)
-    return records
-
+from math import comb
 
 here = Path(__file__).parent
-text = (here / "input.txt").read_text()
+k, N = map(int, (here / "input.txt").read_text().split())
 
-answer = text
-print(answer)
-(here / "output.txt").write_text(f"{answer}\n")
+n = 2**k
+p = 0.25
+
+answer = 1 - sum(comb(n, i) * p**i * (1 - p)**(n - i) for i in range(N))
+
+print(round(answer, 3))
+(here / "output.txt").write_text(f"{answer:.3f}\n")
