@@ -1,7 +1,7 @@
 .PHONY: run check submit
 
 run:
-	uv run main.py
+	cargo run
 
 # run on sample.txt and compare output.txt with expected.txt
 check:
