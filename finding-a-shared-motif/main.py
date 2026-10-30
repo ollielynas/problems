@@ -1,19 +1,23 @@
-"""Finding a Shared Motif"""
 from pathlib import Path
 
-
 def fasta(text):
-    """Parse FASTA into {id: sequence}, in file order."""
     records = {}
     for block in text.split(">")[1:]:
         name, *lines = block.splitlines()
-        records[name.strip()] = "".join(line.strip() for line in lines)
+        records[name.strip()] = "".join(l.strip() for l in lines)
     return records
 
+seqs = list(fasta((Path(__file__).parent / "input.txt").read_text()).values())
+shortest = min(seqs, key=len)
+others = [s for s in seqs if s is not shortest]
 
-here = Path(__file__).parent
-text = (here / "input.txt").read_text()
+def shared_motif():
+    n = len(shortest)
+    for length in range(n, 0, -1):
+        for start in range(n - length + 1):
+            cand = shortest[start:start + length]
+            if all(cand in s for s in others):
+                return cand
+    return ""
 
-answer = text
-print(answer)
-(here / "output.txt").write_text(f"{answer}\n")
+print(shared_motif())
