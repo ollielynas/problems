@@ -1,0 +1,23 @@
+[project]
+name = "rosalind-utils"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Ollie Lynas", email = "lynasollie@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = []
+
+[tool.maturin]
+module-name = "rosalind_utils._core"
+python-packages = ["rosalind_utils"]
+python-source = "src"
+features = ["python"]
+
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { file = "src/**/*.rs" }, { file = "Cargo.toml" }, { file = "Cargo.lock" }]
+
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"

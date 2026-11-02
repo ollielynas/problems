@@ -1,0 +1,16 @@
+[package]
+name = "rosalind-utils"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "rosalind_utils"
+# "cdylib" is what Python imports, "rlib" is what Rust solutions link against.
+crate-type = ["cdylib", "rlib"]
+
+[features]
+# Only enabled for Python builds (see pyproject.toml), so Rust solutions never compile or link pyo3.
+python = ["dep:pyo3"]
+
+[dependencies]
+pyo3 = { version = "0.28.2", features = ["extension-module", "abi3-py39"], optional = true }
