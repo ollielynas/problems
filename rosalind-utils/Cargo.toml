@@ -13,4 +13,4 @@ crate-type = ["cdylib", "rlib"]
 python = ["dep:pyo3"]
 
 [dependencies]
-pyo3 = { version = "0.28.2", features = ["extension-module", "abi3-py39"], optional = true }
+pyo3 = { version = "0.28.2", features = ["extension-module", "abi3-py39", "experimental-inspect"], optional = true }

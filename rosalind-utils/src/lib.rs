@@ -6,6 +6,48 @@
 //! `&str`, `String`, numbers, `Vec`, `HashMap`, `Option` and tuples.
 //!
 //! Helpers that should be Rust-only go outside the block.
+//!
+//! `read_input` and `write_output` are the exception: they need the solution's
+//! folder, so they are macros here and plain functions in `rosalind_utils/__init__.py`.
+#![feature(portable_simd)]
+
+pub mod simd_string;
+
+use simd_string::{find_proteins_u8, reverse_complement_u8, translate_u8};
+use std::{fmt::Display, fs};
+
+/// The contents of the solution's `input.txt`: `let text = read_input!();`
+#[macro_export]
+macro_rules! read_input {
+    () => {
+        $crate::read_input_from(env!("CARGO_MANIFEST_DIR"))
+    };
+}
+
+/// Prints the answer and saves it to the solution's `output.txt`: `write_output!(answer);`
+#[macro_export]
+macro_rules! write_output {
+    ($answer:expr) => {
+        $crate::write_output_to(env!("CARGO_MANIFEST_DIR"), &$answer)
+    };
+}
+
+#[doc(hidden)]
+pub fn read_input_from(dir: &str) -> String {
+    let path = format!("{dir}/input.txt");
+    fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("could not read {path}: {e}"))
+        .trim()
+        .to_string()
+}
+
+#[doc(hidden)]
+pub fn write_output_to(dir: &str, answer: &dyn Display) {
+    println!("{answer}");
+    let path = format!("{dir}/output.txt");
+    fs::write(&path, format!("{answer}\n"))
+        .unwrap_or_else(|e| panic!("could not write {path}: {e}"));
+}
 
 /// Exposes each function as normal Rust and registers it with the Python module.
 macro_rules! utils {
@@ -18,10 +60,8 @@ macro_rules! utils {
 
         #[cfg(feature = "python")]
         #[pyo3::pymodule]
-        fn _core(m: &pyo3::Bound<'_, pyo3::types::PyModule>) -> pyo3::PyResult<()> {
-            use pyo3::types::PyModuleMethods;
-            $(m.add_function(pyo3::wrap_pyfunction!($name, m)?)?;)*
-            Ok(())
+        mod _core {
+            $(#[pymodule_export] use super::$name;)*
         }
     };
 }
@@ -32,6 +72,23 @@ utils! {
         let gc = seq.bytes().filter(|b| matches!(b, b'G' | b'C')).count();
         gc as f64 / seq.len() as f64
     }
+
+
+    /// Reverse complement of DNA or RNA. If `dna` contains a `U`, every `A` pairs with `U`.
+    pub fn reverse_complement(dna: &str) -> String {
+        assert!(dna.is_ascii());
+        String::from_utf8(reverse_complement_u8(dna.as_bytes())).unwrap()
+    }
+
+    pub fn dna_to_protin(dna: &str) -> String {
+        String::from_utf8(translate_u8(dna.as_bytes())).unwrap()
+    }
+
+    /// Distinct proteins from all six reading frames of `dna`, longest first.
+    pub fn find_proteins(dna: &str) -> Vec<String> {
+        find_proteins_u8(dna.as_bytes())
+    }
+
 
     /// Parses FASTA text into `(id, sequence)` pairs.
     pub fn parse_fasta(text: &str) -> Vec<(String, String)> {

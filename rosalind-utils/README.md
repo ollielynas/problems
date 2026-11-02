@@ -1,1 +1,1 @@
-# AI wrote the boilerplate of this repo but the util functions were all wrriten by a human
+This utils lib contails optimised verisons of past solutions so that they may be reused. Ai has been used to do this but every problem was solved without AI first.
