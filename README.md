@@ -1,5 +1,5 @@
 # problems
 <!-- With an icon (any Simple Icons name works) -->
-![No AI](https://img.shields.io/badge/AI-None-red?logo=probot&logoColor=white)
+![Human Written Code](https://img.shields.io/badge/Human_Written_Code-brightgreen)
 
 Solutions to programming problems, one folder each.
