@@ -1,0 +1,11 @@
+[project]
+name = "rna-splicing"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14"
+dependencies = [
+    "rosalind-utils",
+]
+
+[tool.uv.sources]
+rosalind-utils = { path = "../rosalind-utils", editable = true }
